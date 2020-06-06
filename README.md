@@ -1,2 +1,2 @@
 # hist-count
-Project about diachrony and even recognition in historical text
+Project about diachrony and event recognition in historical text

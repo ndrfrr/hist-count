@@ -399,7 +399,7 @@ class BiLSTM:
             start_time = time.time() 
             for modelName in self.evaluateModelNames:
                 logging.info("-- %s --" % (modelName))
-                dev_score, test_score = self.computeScore(modelName, self.data[modelName]['devMatrix'], self.data[modelName]['testMatrix'])
+                train_score, dev_score, test_score = self.computeScore(modelName, self.data[modelName]['devMatrix'], self.data[modelName]['testMatrix'], self.data[modelName]['trainMatrix'])
          
                 
                 if dev_score > max_dev_score[modelName]:
@@ -419,7 +419,7 @@ class BiLSTM:
                     self.resultsSavePath.write("\n")
                     self.resultsSavePath.flush()
                 
-                logging.info("\nScores from epoch with best dev-scores:\n  Dev-Score: %.4f\n  Test-Score %.4f" % (max_dev_score[modelName], max_test_score[modelName]))
+                logging.info("\nScores from epoch with best dev-scores:\n  Train-Score: %.4f\n  Dev-Score: %.4f" % (train_score, dev_score))
                 logging.info("")
                 
             logging.info("%.2f sec for evaluation" % (time.time() - start_time))
@@ -484,15 +484,15 @@ class BiLSTM:
         return predLabels
     
    
-    def computeScore(self, modelName, devMatrix, testMatrix):
+    def computeScore(self, modelName, devMatrix, testMatrix, trainMatrix):
         if self.labelKeys[modelName].endswith('_BIO') or self.labelKeys[modelName].endswith('_IOBES') or self.labelKeys[modelName].endswith('_IOB'):
-            return self.computeF1Scores(modelName, devMatrix, testMatrix)
+            return self.computeF1Scores(modelName, devMatrix, testMatrix, trainMatrix)
         else:
-            return self.computeAccScores(modelName, devMatrix, testMatrix)   
+            return self.computeAccScores(modelName, devMatrix, testMatrix, trainMatrix)   
 
-    def computeF1Scores(self, modelName, devMatrix, testMatrix):
-        #train_pre, train_rec, train_f1 = self.computeF1(modelName, self.datasets[modelName]['trainMatrix'])
-        #print "Train-Data: Prec: %.3f, Rec: %.3f, F1: %.4f" % (train_pre, train_rec, train_f1)
+    def computeF1Scores(self, modelName, devMatrix, testMatrix, trainMatrix):
+        train_pre, train_rec, train_f1 = self.computeF1(modelName, trainMatrix)
+        logging.info("Train-Data: Prec: %.3f, Rec: %.3f, F1: %.4f" % (train_pre, train_rec, train_f1))
         
         dev_pre, dev_rec, dev_f1 = self.computeF1(modelName, devMatrix)
         logging.info("Dev-Data: Prec: %.3f, Rec: %.3f, F1: %.4f" % (dev_pre, dev_rec, dev_f1))
@@ -500,7 +500,7 @@ class BiLSTM:
         test_pre, test_rec, test_f1 = self.computeF1(modelName, testMatrix)
         logging.info("Test-Data: Prec: %.3f, Rec: %.3f, F1: %.4f" % (test_pre, test_rec, test_f1))
         
-        return dev_f1, test_f1
+        return train_f1, dev_f1, test_f1
     
     def computeAccScores(self, modelName, devMatrix, testMatrix):
         dev_acc = self.computeAcc(modelName, devMatrix)

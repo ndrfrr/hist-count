@@ -1,16 +1,17 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, Set
 import numpy as np
 import scipy
 from scipy import spatial
 
-def glove_to_dict(embedding: str, embedding_length: int = 300) -> Dict[str, np.float]:
+def glove_to_dict(embedding: str, voc: Set[str] = None) -> Dict[str, np.float]:
     result = dict()
     '''
     Reads a text file storing the glove embeddings and creates a dictionary representation of it.
     '''
     for line in open(embedding, 'r'):
         line = line.split()
-        result[line[0]] = np.array(line[1:]).astype(np.float)
+        if voc == None or line[0] in voc:
+            result[line[0]] = np.array(line[1:]).astype(np.float)
     return result
 
 

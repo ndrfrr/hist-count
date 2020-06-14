@@ -160,7 +160,9 @@ def checkBIOEncoding(predictions, correctBIOErrors):
         
 
         for labelIdx in range(len(predictions[sentenceIdx])): 
-            label = predictions[sentenceIdx][labelIdx]      
+
+            label = predictions[sentenceIdx][labelIdx] 
+
             if label.startswith('B-'):
                 labels += 1
                 labelStarted = True
@@ -182,6 +184,8 @@ def checkBIOEncoding(predictions, correctBIOErrors):
                         labelStarted = False
                         labelClass = None
             else:
+                logging.info(label)
+                logging.info('ciao')
                 assert(False) #Should never be reached
            
     

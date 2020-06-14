@@ -399,7 +399,7 @@ class BiLSTM:
             start_time = time.time() 
             for modelName in self.evaluateModelNames:
                 logging.info("-- %s --" % (modelName))
-                train_score, dev_score, test_score = self.computeScore(modelName, self.data[modelName]['devMatrix'], self.data[modelName]['testMatrix'], self.data[modelName]['trainMatrix'])
+                (train_pre, train_rec, train_score), (dev_pre, dev_rec, dev_score), (test_pre, test_rec, test_score) = self.computeScore(modelName, self.data[modelName]['devMatrix'], self.data[modelName]['testMatrix'], self.data[modelName]['trainMatrix'])
          
                 
                 if dev_score > max_dev_score[modelName]:
@@ -415,17 +415,19 @@ class BiLSTM:
                     
                     
                 if self.resultsSavePath != None:
-                    self.resultsSavePath.write("\t".join(map(str, [epoch + 1, modelName, dev_score, test_score, max_dev_score[modelName], max_test_score[modelName]])))
+                    self.resultsSavePath.write("\t".join(map(str, [epoch + 1, modelName, dev_pre, dev_rec, dev_score, test_pre, test_rec, test_score, max_dev_score[modelName], max_test_score[modelName]])))
                     self.resultsSavePath.write("\n")
                     self.resultsSavePath.flush()
                 
-                logging.info("\nScores from epoch with best dev-scores:\n  Train-Score: %.4f\n  Dev-Score: %.4f" % (train_score, dev_score))
+                logging.info("\nScores from last epoch:\n  Train-Score: %.4f\n  Dev-Score: %.4f" % (train_score, dev_score))
                 logging.info("")
                 
             logging.info("%.2f sec for evaluation" % (time.time() - start_time))
             
             if self.params['earlyStopping']  > 0 and no_improvement_since >= self.params['earlyStopping']:
+                logging.info("\nScores from epoch with best dev-scores:\n  Test-Score: %.4f\n  Dev-Score: %.4f" % (max_test_score[modelName], max_dev_score[modelName]))
                 logging.info("!!! Early stopping, no improvement after "+str(no_improvement_since)+" epochs !!!")
+
                 break
             
             
@@ -500,7 +502,7 @@ class BiLSTM:
         test_pre, test_rec, test_f1 = self.computeF1(modelName, testMatrix)
         logging.info("Test-Data: Prec: %.3f, Rec: %.3f, F1: %.4f" % (test_pre, test_rec, test_f1))
         
-        return train_f1, dev_f1, test_f1
+        return ((train_pre, train_rec, train_f1), (dev_pre, dev_rec, dev_f1), (test_pre, test_rec, test_f1))
     
     def computeAccScores(self, modelName, devMatrix, testMatrix):
         dev_acc = self.computeAcc(modelName, devMatrix)

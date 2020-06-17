@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{embeddings}
+F.~Almeida and G.~Xexéo, ``Word embeddings: A survey,'' 2019.
+
+\bibitem{wtv}
+T.~Mikolov, I.~Sutskever, K.~Chen, G.~S. Corrado, and J.~Dean, ``Distributed
+  representations of words and phrases and their compositionality,'' in {\em
+  Advances in Neural Information Processing Systems 26} (C.~J.~C. Burges,
+  L.~Bottou, M.~Welling, Z.~Ghahramani, and K.~Q. Weinberger, eds.),
+  pp.~3111--3119, Curran Associates, Inc., 2013.
+
+\bibitem{glove}
+J.~Pennington, R.~Socher, and C.~D. Manning, ``Glove: Global vectors for word
+  representation,'' in {\em Empirical Methods in Natural Language Processing
+  (EMNLP)}, pp.~1532--1543, 2014.
+
+\end{thebibliography}

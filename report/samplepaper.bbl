@@ -15,4 +15,11 @@ J.~Pennington, R.~Socher, and C.~D. Manning, ``Glove: Global vectors for word
   representation,'' in {\em Empirical Methods in Natural Language Processing
   (EMNLP)}, pp.~1532--1543, 2014.
 
+\bibitem{event-survey1}
+J.~Kalita, ``Detecting and extracting events from text documents,'' 2016.
+
+\bibitem{event-survey2}
+X.~Wei and B.~Wang, ``A survey of event extraction from text,'' {\em IEEE
+  Access}, vol.~PP, pp.~1--1, 11 2019.
+
 \end{thebibliography}

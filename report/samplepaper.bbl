@@ -39,4 +39,8 @@ W.~L. Hamilton, J.~Leskovec, and D.~Jurafsky, ``Diachronic word embeddings
   Long Papers)}, (Berlin, Germany), pp.~1489--1501, Association for
   Computational Linguistics, aug 2016.
 
+\bibitem{bilstm}
+N.~Reimers and I.~Gurevych, ``Reporting score distributions makes a difference:
+  Performance study of lstm-networks for sequence tagging,'' 2017.
+
 \end{thebibliography}

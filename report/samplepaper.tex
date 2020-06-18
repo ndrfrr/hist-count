@@ -5,6 +5,8 @@
 \documentclass[runningheads]{llncs}
 %
 \usepackage{graphicx}
+\usepackage{multirow}
+\renewcommand{\arraystretch}{1.2}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
 %
@@ -51,7 +53,7 @@ To solve these problems several techniques, either based on neural networks or m
 
 Event detection is one of the numerous tasks that make use of word embeddings. Part of the complexity of the task stems from the intrinsic ambiguity of what can be defined as an event, the Oxford English Dictionary definition of event ``anything that happens, or is contemplated as happening; an incident, occurrence", can be taken as a good baseline. Event detection goes beyond just finding events in unstructured and unprocessed text, it is often concerned with classifying them according to their type and identifying participants and attributes \cite{event-survey1}.
 
-More recently developed event detection systems make heavy use of deep learning techniques, in particular recurrent neural network, in all of its variants, appears to be the more promising model thanks to the possibility of analyzing arbitrarily long sequences of labled data \cite{event-survey2}. Particulary bi-directional long short-term memory network appear to be the preferred model.
+More recently developed event detection systems make heavy use of deep learning techniques, in particular recurrent neural network, in all of its variants, appears to be the more promising model thanks to the possibility of analyzing arbitrarily long sequences of labled data \cite{event-survey2}. Particulary bi-directional long short-term memory (BiLSTM) network appear to be the preferred model.
 
 \section{Research question and methodology}
 
@@ -59,9 +61,36 @@ Most of the efforts in developing event detection systems are focused on contemp
 
 To accomplish the first task the word embedding obtained from historical text of \cite{histo} is compared to a contemporary word embedding, and, in order to have a meaningful baseline, diferrences between two contemporary word embeddings are also taken. There isn't a clear straight forward way to compare word embeddings, but inspired by \cite{embcomp} three methods of analysis are derived. First the distances between pairs of words that are supposed to represent a similar juxtaposition are compared for the embeddings. Then, after having rotated one embedding to best approximate the other \cite{rotation}, the cosine distance of two vectors representing the same words in the two embeddings is calculated. Finally, given a word, the set of k nearset words, according to the cosine distance, is taken for each embedding and the Jaccard similarity between the two set is computed. The rational for all three methods is that the closer are the vectors the more similar are the embeddings.
 
-The set of words chosen for the analysis contains verbs which convey the realization of an event (as described in the event detection guidelines of \cite{histo}), some common words, and words whose meaning is supposed to have evolved or changed during time; common words are taken as a baseline to measure the distance between other words in the different embeddings.
+The set of words chosen for the analysis contains verbs which convey the realization of an event (as described in the event detection guidelines of \cite{histo}), some common words, and words whose meaning is supposed to have evolved or changed during time. Common words are taken as a baseline to measure the distance between other words in the different embeddings.
 
-As for the second task, the same event detection model 
+As for the second task an event detection model based on BiLSTM networks \cite{bilstm} is used. Given two annotated corpora, one historical and one contemporary, each one is split into training and test set, and different combinations of these splits are used to train and evaluate the model on detecting event mentions (the event classification task is not considered). For example the model can be trained on the training set of the historical corpus and evaluated on the test set of the contemporary corpus. The various results are analyzed to see if there's a substantial difference in performance when changing from historical to contemporary text. The model also takes as a parameter a word embedding: the impact on performances of using a word embedding obtained from historical text opposed to using a word embedding obtained from contemporary text is also analyzed.
+
+\section{Experimental results}
+
+The word embedding based on historical text (embHisto) is provided by \cite{histo} and is obtained by using the GloVe algorithm on a subset of the Corpus of Historical American English consisting of 36,856 texts published between 1860 and 1939 for a total of more than 198 million tokens. The contemporary embedding (embGlove) is also trained using GloVe on a corpus composed by Wikipedia 2014 and Gigaword 5 for a total of 6 billion tokens. The other contemporary embedding (embCurrent) is also GloVe based and is trained on a subset of Common Crawl corpus for a total of 42 billion tokens. The two contemporary embeddings are provided by \cite{glove} and all three embeddings have vectors of 300 dimensions.
+
+The first method compares the cosine distance between pairs of words in the various embeddings. The juxtapositions of the pair should mantain the same distance between each embedding. The results are shonw in Table \ref{tab:justappox}.
+
+\begin{table}
+\centering
+\caption{Cosine distances of pair of words in various embeddings.}
+\label{tab:justappox}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\multirow{2}{*}{Word pair} & \multicolumn{3}{|c|}{Cosine distance}\\\cline{2-4}
+&embHisto&embGlove&embCurrent\\
+\hline
+(man, woman) &  0.337 & 0.300 & 0.195\\
+(he, she) & 0.283 & 0.292 & 0.130\\
+(king, queen) & 0.359 & 0.366 & 0.240\\
+(brother, sister) & 0.344 & 0.405 & 0.250\\
+(male, female) & 0.198 & 0.105 & 0.062\\
+(and, but) & 0.405 & 0.418 & 0.243\\
+\hline
+\end{tabular}
+\end{table}
+
+
 
 
 \subsubsection{Sample Heading (Third Level)} Only two levels of

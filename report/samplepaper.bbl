@@ -22,4 +22,21 @@ J.~Kalita, ``Detecting and extracting events from text documents,'' 2016.
 X.~Wei and B.~Wang, ``A survey of event extraction from text,'' {\em IEEE
   Access}, vol.~PP, pp.~1--1, 11 2019.
 
+\bibitem{histo}
+R.~Sprugnoli and S.~Tonelli, ``Novel event detection and classification for
+  historical texts,'' {\em Computational Linguistics}, vol.~45, no.~2,
+  pp.~229--265, 2019.
+
+\bibitem{embcomp}
+J.~Chen, Y.~Tao, and H.~Lin, ``Visual exploration and comparison of word
+  embeddings,'' {\em Journal of Visual Languages and Computing}, vol.~48, 08
+  2018.
+
+\bibitem{rotation}
+W.~L. Hamilton, J.~Leskovec, and D.~Jurafsky, ``Diachronic word embeddings
+  reveal statistical laws of semantic change,'' in {\em Proceedings of the 54th
+  Annual Meeting of the Association for Computational Linguistics (Volume 1:
+  Long Papers)}, (Berlin, Germany), pp.~1489--1501, Association for
+  Computational Linguistics, aug 2016.
+
 \end{thebibliography}

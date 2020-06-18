@@ -53,11 +53,15 @@ Event detection is one of the numerous tasks that make use of word embeddings. P
 
 More recently developed event detection systems make heavy use of deep learning techniques, in particular recurrent neural network, in all of its variants, appears to be the more promising model thanks to the possibility of analyzing arbitrarily long sequences of labled data \cite{event-survey2}. Particulary bi-directional long short-term memory network appear to be the preferred model.
 
-\section{•}
+\section{Research question and methodology}
 
+Most of the efforts in developing event detection systems are focused on contemporary text and on corpora of the biomedical field. The work in \cite{histo} tries to change this by addressing the task of event detection in historical text. It does so by providing a new annotated dataset of events in historical text, a new word embedding created from various historical documents, and a model to detect those events. Starting from these available results, the aim is to both analyze language variation in time and the extent to which this adresses the task of event detection in historical text.
 
+To accomplish the first task the word embedding obtained from historical text of \cite{histo} is compared to a contemporary word embedding, and, in order to have a meaningful baseline, diferrences between two contemporary word embeddings are also taken. There isn't a clear straight forward way to compare word embeddings, but inspired by \cite{embcomp} three methods of analysis are derived. First the distances between pairs of words that are supposed to represent a similar juxtaposition are compared for the embeddings. Then, after having rotated one embedding to best approximate the other \cite{rotation}, the cosine distance of two vectors representing the same words in the two embeddings is calculated. Finally, given a word, the set of k nearset words, according to the cosine distance, is taken for each embedding and the Jaccard similarity between the two set is computed. The rational for all three methods is that the closer are the vectors the more similar are the embeddings.
 
-Most of the efforts in developing event detection systems are focused on contemporary text and on the biomedical field. 
+The set of words chosen for the analysis contains verbs which convey the realization of an event (as described in the event detection guidelines of \cite{histo}), some common words, and words whose meaning is supposed to have evolved or changed during time; common words are taken as a baseline to measure the distance between other words in the different embeddings.
+
+As for the second task, the same event detection model 
 
 
 \subsubsection{Sample Heading (Third Level)} Only two levels of

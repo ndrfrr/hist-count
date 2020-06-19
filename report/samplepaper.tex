@@ -48,7 +48,6 @@ The abstract should briefly summarize the contents of the paper in
 %
 %
 \section{Introduction}
-%\subsection{A Subsection Sample}
 Word embeddings aim to map words of a vocabulary to vectors of numbers. This is done in order to have a more versatile, tractable, and mathematical representation of those words and improve the performances of several natural language processing tasks. The more intuitive way to do so would be to have a one-hot encoding representation of each word in the vocabulary. This method, however doesn't provide any information about the meaning of a word. To allow the vectors to retain semantic meaning the foundamental idea of distributional semantics is used: words have similar meaning if they appear in similar contexts. This translates to, given a corpus of documents, representing a word as a distribution, over the vocabulary, of the frequency of the words that appear in its context in the corpus. These vectors have the limit of being highly dimensional and extrimely sparse: every word would be represented by a vector of tens of thousands dimensions (the size of the vocabulary) the vast majority of which would have value zero.
 
 To solve these problems several techniques, either based on neural networks or matrix factorization, have been proposed \cite{embeddings}. They both start from the sparse and high dimensional co-occurence matrix and obtain a fixed length, dense, and real valued vector for each word. The vectors are not interpretable when taken singularly, but when analyzed and compared to one another they show interesting properties: words that have similar meaning (in the distributional semantics sense) have vectors that are closed to each other according to the cosine or Euclidean distance, and pairs of vectors representing pairs of words analogy, such as man and woman, king and queen, also have the similar distances. Examples of embeddings algorithms with comparable performance based respectively on neural networks and matrix factorization techniques are Word2Vec \cite{wtv} and GloVe \cite{glove}.
@@ -68,6 +67,8 @@ The set of words chosen for the analysis contains verbs which convey the realiza
 As for the second task an event detection model based on BiLSTM networks \cite{bilstm} is used. Given two annotated corpora, one historical and one contemporary, each one is split into training and test set, and different combinations of these splits are used to train and evaluate the model to detect event mentions in text (the event classification task is not considered). For example the model can be trained on the training set of the historical corpus and evaluated on the test set of the contemporary corpus. The various results are analyzed to see if there's a substantial difference in performance when changing from historical to contemporary text. The model also takes as a parameter a word embedding: the impact on performances of using a word embedding obtained from historical text opposed to using a word embedding obtained from contemporary text is also analyzed.
 
 \section{Experimental results}
+
+\subsection{Word embeddings comparison}
 
 The word embedding based on historical text (embHisto) is provided by \cite{histo} and is obtained by using the GloVe algorithm on a subset of the Corpus of Historical American English consisting of 36,856 texts published between 1860 and 1939 for a total of more than 198 million tokens. The contemporary embedding (embGlove) is also trained using GloVe on a corpus composed by Wikipedia 2014 and Gigaword 5 for a total of 6 billion tokens. The other contemporary embedding (embCurrent) is also GloVe based and is trained on a subset of Common Crawl corpus for a total of 42 billion tokens. The two contemporary embeddings are provided by \cite{glove} and all three embeddings have vectors of 300 dimensions.
 
@@ -92,7 +93,7 @@ The first method of analysis compares the cosine distance between pairs of words
 \end{tabular}
 \end{table}
 
-The second method, given a word, takes the two vectors representing that word in the two embeddings that are compared and computes the cosine distance between those vectors. To have a more meaningful comparison the embeddings should be aligned in order to compensate for the random position of the vector in the space \cite{embcomp}, this translates to rotating one embedding to best aproximate the other. This technique exploits the fact that the relative position of many common words is similar across various embeddings, as seen in the previous paragraph. Formalizing the problem we have a matrix $A$ representing the embedding to rotate, and the matrix $B$ representing the embedding to aproximate. The matrices, where each row corresponds to a vector of an embedded word, must have the same number of rows and columns, therefore the vocabularies of the embeddings need to be equalized. The solution to how to rotate the matrix is given by the rotatin matrix $Q$ obtained by solving the optimization problem know in literature as the orthogonal Procrustes problem:
+The second method, given a word, takes the two vectors representing that word in the two embeddings that are compared and computes the cosine distance between those vectors. In order to have a more meaningful comparison, the embeddings should be aligned to compensate for the random position of the vectors in the space \cite{embcomp}, this translates to rotating one embedding to best aproximate the other. This technique exploits the fact that the relative position of many common words is similar across various embeddings, as seen in the previous paragraph. Formalizing the problem we have a matrix $A$ representing the embedding to be rotated, and the matrix $B$ representing the embedding to be aproximate. The matrices, where each row corresponds to a vector of an embedded word, must have the same number of rows and columns, therefore the vocabularies of the embeddings need to be equalized. The solution to how to rotate the matrix is given by the rotation matrix $Q$ obtained by solving the optimization problem know in literature as the orthogonal Procrustes problem:
 \begin{align*}
 \mathop{argmin}_{\textbf{Q}}\; ||B - AQ|| \\
 subject\; to\; QQ^t = I
@@ -109,9 +110,9 @@ As before the comparison is done on the same list of words and between the pair 
 
 \begin{table}
 \begin{minipage}{.44\linewidth}
-\label{tab:cosdist}
 \centering
 \caption{Cosine distances between words in different embeddings after alignment.}
+\label{tab:cosdist}
 \begin{tabular}{|c|c|c|}
 \hline
 \multirow{3}{*}{Word} & \multicolumn{2}{|c|}{Cosine distance}\\\cline{2-3}
@@ -155,9 +156,9 @@ computer & 0.995 & 0.621\\
 \end{tabular}
 \end{minipage}
 \begin{minipage}{.44\linewidth}
-\label{tab:knn}
 \centering
 \caption{Jaccard distance between sets of neighbours in different embeddings for a given word.}
+\label{tab:knn}
 \begin{tabular}{|c|c|c|}
 \hline
 \multirow{3}{*}{Word} & \multicolumn{2}{|c|}{Jaccard distance}\\\cline{2-3}
@@ -198,9 +199,12 @@ computer & 1.076 & 0.174\\
 \end{minipage}
 \end{table}
 
+\subsection{Event mentions detection}
+For the second task of detecting event mentions a BiLSTM network \footnote{https://github.com/UKPLab/emnlp2017-bilstm-cnn-crf}, whose detalied description is given in \cite{bilstm}, is the model used. The complete structure is a bidirectional recurrent neural network that takes as input, encoding the categorical feature as one-hot encoded vectors when needed, the embedding for the word, the lemma of the word, the part of speech, and the casing. These input features are concatenated and fed to a LSTM network composed by two layer of 75 LSTM units each and having a dropout of 0.25 after each layer. The model is bidirectional, meaning there are two LSTM network, one running rom the beginning of the sentence to the end while the other runnig in reverse. The outputs of the two networks are concatenated and fed to a softmax classifier layer.
 
+The datasets used to train the model are the Histo Corpus \cite{histo} \footnote{https://github.com/dhfbk/Histo}, composed of news and travel narratives documents published between the second half of the nineteenth century and the beginning of the twentieth century, and the NIST TAC KBP 2015 Event Nugget Detection corpus \cite{tac} \footnote{https://github.com/UKPLab/tac2015-event-detection/tree/master/tacdata}, composed of contemporary weblogs, broadcast news, newsgroups, broadcast conversation. Event mentions have been manually annotated in the two corpora following different guidelines. Both datasets have been converted to a IOB2 compatible format and they have been divided into a training set and a test set.
 
-
+The model was trained and evaluated on a subset of the possible combinations (to accomodate the issues given by size disparity of the two corpora) of training sets (trainHisto, trainTAC), test sets (testHisto, testTAC), and two embeddings (embHisto, embGlove). The metrics used for evaluation are precision, recall, and F1-score. Results are shown in table. 
 
 
 

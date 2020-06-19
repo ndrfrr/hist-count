@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{embeddings}
 F.~Almeida and G.~Xexéo, ``Word embeddings: A survey,'' 2019.
@@ -40,7 +40,11 @@ W.~L. Hamilton, J.~Leskovec, and D.~Jurafsky, ``Diachronic word embeddings
   Computational Linguistics, aug 2016.
 
 \bibitem{bilstm}
-N.~Reimers and I.~Gurevych, ``Reporting score distributions makes a difference:
-  Performance study of lstm-networks for sequence tagging,'' 2017.
+N.~Reimers and I.~Gurevych, ``Optimal hyperparameters for deep lstm-networks
+  for sequence labeling tasks,'' 2017.
+
+\bibitem{tac}
+T.~Mitamura, Z.~Liu, and E.~H. Hovy, ``Overview of tac kbp 2015 event nugget
+  track.,'' 2017.
 
 \end{thebibliography}

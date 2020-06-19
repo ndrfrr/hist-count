@@ -69,7 +69,7 @@ As for the second task an event detection model based on BiLSTM networks \cite{b
 
 The word embedding based on historical text (embHisto) is provided by \cite{histo} and is obtained by using the GloVe algorithm on a subset of the Corpus of Historical American English consisting of 36,856 texts published between 1860 and 1939 for a total of more than 198 million tokens. The contemporary embedding (embGlove) is also trained using GloVe on a corpus composed by Wikipedia 2014 and Gigaword 5 for a total of 6 billion tokens. The other contemporary embedding (embCurrent) is also GloVe based and is trained on a subset of Common Crawl corpus for a total of 42 billion tokens. The two contemporary embeddings are provided by \cite{glove} and all three embeddings have vectors of 300 dimensions.
 
-The first method compares the cosine distance between pairs of words in the various embeddings. The juxtapositions of the pair should mantain the same distance between each embedding. The results are shonw in Table \ref{tab:justappox}.
+The first method compares the cosine distance between pairs of words in the various embeddings. The distance function used is the cosine distance because of its invariance to the magnitude of the vectors, accounting only for the angle between them. The underline idea is that juxtapositions should mantain the same distance between each embedding if the relative meaning of the words in the pair is the same. The results are shonw in Table \ref{tab:justappox}.
 
 \begin{table}
 \centering

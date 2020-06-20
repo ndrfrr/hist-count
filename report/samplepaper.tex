@@ -80,7 +80,7 @@ The first method of analysis compares the cosine distance between pairs of words
 \label{tab:juxtapos}
 \begin{tabular}{|c|c|c|c|}
 \hline
-\multirow{2}{*}{Word pair} & \multicolumn{3}{|c|}{Cosine distance}\\\cline{2-4}
+\multirow{2}{*}{{\bfseries Word pair}} & \multicolumn{3}{|c|}{{\bfseries Cosine distance}}\\\cline{2-4}
 &embHisto&embGlove&embCurrent\\
 \hline
 (man, woman) &  0.337 & 0.300 & 0.195\\
@@ -115,7 +115,7 @@ As before the comparison is done on the same list of words and between the pair 
 \label{tab:cosdist}
 \begin{tabular}{|c|c|c|}
 \hline
-\multirow{3}{*}{Word} & \multicolumn{2}{|c|}{Cosine distance}\\\cline{2-3}
+\multirow{3}{*}{{\bfseries Word}} & \multicolumn{2}{|c|}{{\bfseries Cosine distance}}\\\cline{2-3}
 &embHisto&embCurrent\\\cline{2-3}
 &embGlove&embGlove\\
 \hline
@@ -161,7 +161,7 @@ computer & 0.995 & 0.621\\
 \label{tab:knn}
 \begin{tabular}{|c|c|c|}
 \hline
-\multirow{3}{*}{Word} & \multicolumn{2}{|c|}{Jaccard distance}\\\cline{2-3}
+\multirow{3}{*}{{\bfseries Word}} & \multicolumn{2}{|c|}{{\bfseries Jaccard distance}}\\\cline{2-3}
 &embHisto&embCurrent\\\cline{2-3}
 &embGlove&embGlove\\
 \hline
@@ -202,11 +202,31 @@ computer & 1.076 & 0.174\\
 \subsection{Event mentions detection}
 For the second task of detecting event mentions a BiLSTM network \footnote{https://github.com/UKPLab/emnlp2017-bilstm-cnn-crf}, whose detalied description is given in \cite{bilstm}, is the model used. The complete structure is a bidirectional recurrent neural network that takes as input, encoding the categorical feature as one-hot encoded vectors when needed, the embedding for the word, the lemma of the word, the part of speech, and the casing. These input features are concatenated and fed to a LSTM network composed by two layer of 75 LSTM units each and having a dropout of 0.25 after each layer. The model is bidirectional, meaning there are two LSTM network, one running rom the beginning of the sentence to the end while the other runnig in reverse. The outputs of the two networks are concatenated and fed to a softmax classifier layer.
 
-The datasets used to train the model are the Histo Corpus \cite{histo} \footnote{https://github.com/dhfbk/Histo}, composed of news and travel narratives documents published between the second half of the nineteenth century and the beginning of the twentieth century, and the NIST TAC KBP 2015 Event Nugget Detection corpus \cite{tac} \footnote{https://github.com/UKPLab/tac2015-event-detection/tree/master/tacdata}, composed of contemporary weblogs, broadcast news, newsgroups, broadcast conversation. Event mentions have been manually annotated in the two corpora following different guidelines. Both datasets have been converted to a IOB2 compatible format and they have been divided into a training set and a test set.
+The datasets used to train the model are the Histo Corpus \footnote{https://github.com/dhfbk/Histo}, composed of news and travel narratives documents published between the second half of the nineteenth century and the beginning of the twentieth century \cite{histo}, and the NIST TAC KBP 2015 Event Nugget Detection corpus \footnote{https://github.com/UKPLab/tac2015-event-detection/tree/master/tacdata}, composed of contemporary weblogs, broadcast news, newsgroups, broadcast conversation \cite{tac}. Event mentions have been manually annotated in the two corpora following different guidelines. Both datasets have been converted to a IOB2 compatible format and they have been divided into a training set and a test set.
 
-The model was trained and evaluated on a subset of the possible combinations (to accomodate the issues given by size disparity of the two corpora) of training sets (trainHisto, trainTAC), test sets (testHisto, testTAC), and two embeddings (embHisto, embGlove). The metrics used for evaluation are precision, recall, and F1-score. Results are shown in table. 
+The model was trained and evaluated on a subset of the possible combinations (to accomodate the issues given by size disparity of the two corpora) of training sets (trainHisto, trainTAC), test sets (testHisto, testTAC), and two embeddings (embHisto, embGlove). The metrics used for evaluation are precision, recall, and F1-score. Results are shown in Table \ref{tab:nnmodel}. 
 
+\begin{table}
+\centering
+\caption{Cosine distances between a pair of words for the various embeddings.}
+\label{tab:nnmodel}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+{\bfseries embedding} & {\bfseries training} & {\bfseries evaluation} & {\bfseries precision} & {\bfseries recall} & {\bfseries F1 score}\\
+\hline
+embGlove &  trainHisto & testHisto & 0.792 & 0.779 & 0.785\\
+embHisto &  trainHisto & testHisto & 0.793 & 0.800 & 0.797\\
+embGlove &  trainHisto & testTAC & 0.235 & 0.657 & 0.346\\
+embHisto &  trainHisto & testTAC & 0.236 & 0.637 & 0.345\\
+embGlove &  trainTAC & testTAC & 0.720 & 0.743 & 0.731\\
+embHisto &  trainTAC & testTAC & 0.775 & 0.663 & 0.715\\
+embGlove &  trainTAC & trainHisto & 0.729 & 0.184 & 0.294\\
+embHisto &  trainTAC & trainHisto & 0.660 & 0.226 & 0.336\\
+\hline
+\end{tabular}
+\end{table}
 
+\section{Concluding remarks}
 
 \subsubsection{Sample Heading (Third Level)} Only two levels of
 headings should be numbered. Lower level headings remain unnumbered;

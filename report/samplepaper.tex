@@ -18,12 +18,12 @@
 
 \begin{document}
 %
-\title{Making History Not Count:\\
-Should Historical Corpora Really Be Treated Differently for Event Detection Tasks?}
-\titlerunning{Making History Not Count}
+\title{Making History Count:\\
+How Word Embeddings Impact\\
+Event Detection in Historical Corpora}
+\titlerunning{Making History Count}
 
 %
-\titlerunning{Making History Not Count}
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
@@ -39,10 +39,9 @@ Should Historical Corpora Really Be Treated Differently for Event Detection Task
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-The abstract should briefly summarize the contents of the paper in
-150--250 words.
+This work tries to analyze the impact that a word embedding has in the event mentions detection in historical text task. Firstly word embeddings generated from historical and contemporary corpora are compared to study the difference between them; special attention is given to terms that commonly convey the realization of an event. Then the embeddings are used separately for event detection on a set of annotated corpora, both historical and contemporary, and the performances are matched. The results suggest that there are slight performances improvements when using a word embedding created from a corpus of a similar period to the text where events are being detected.
 
-\keywords{Event Detection  \and Historical Event Detection \and Glove \and \\ Embeddings comparison.}
+\keywords{Event Detection  \and Historical Event Detection \and Word Embeddings \and Embeddings comparison.}
 \end{abstract}
 %
 %
@@ -70,7 +69,7 @@ As for the second task an event detection model based on BiLSTM networks \cite{b
 
 \subsection{Word embeddings comparison}
 
-The word embedding based on historical text (embHisto) is provided by \cite{histo} and is obtained by using the GloVe algorithm on a subset of the Corpus of Historical American English consisting of 36,856 texts published between 1860 and 1939 for a total of more than 198 million tokens. The contemporary embedding (embGlove) is also trained using GloVe on a corpus composed by Wikipedia 2014 and Gigaword 5 for a total of 6 billion tokens. The other contemporary embedding (embCurrent) is also GloVe based and is trained on a subset of Common Crawl corpus for a total of 42 billion tokens. The two contemporary embeddings are provided by \cite{glove} and all three embeddings have vectors of 300 dimensions.
+The word embedding based on historical text \footnote{https://github.com/dhfbk/Histo} (embHisto) is provided by \cite{histo} and is obtained by using the GloVe algorithm on a subset of the Corpus of Historical American English consisting of 36,856 texts published between 1860 and 1939 for a total of more than 198 million tokens. The contemporary embedding (embGlove) is also trained using GloVe on a corpus composed by Wikipedia 2014 and Gigaword 5 for a total of 6 billion tokens \footnote{http://nlp.stanford.edu/data/glove.6B.zip}. The other contemporary embedding (embCurrent) is also GloVe based and is trained on a subset of Common Crawl corpus for a total of 42 billion tokens \footnote{http://nlp.stanford.edu/data/glove.42B.300d.zip}. The two contemporary embeddings are provided by \cite{glove} and all three embeddings have vectors of 300 dimensions.
 
 The first method of analysis compares the cosine distance between pairs of words in the various embeddings. The distance function used is the cosine distance because of its invariance to the magnitude of the vectors, accounting only for the angle between them. The underline idea is that juxtapositions should mantain the same distance between each embedding if the relative meaning of the words in the pair is the same. The results are shonw in Table \ref{tab:juxtapos}.
 
@@ -200,11 +199,13 @@ computer & 1.076 & 0.174\\
 \end{table}
 
 \subsection{Event mentions detection}
+
+
 For the second task of detecting event mentions a BiLSTM network \footnote{https://github.com/UKPLab/emnlp2017-bilstm-cnn-crf}, whose detalied description is given in \cite{bilstm}, is the model used. The complete structure is a bidirectional recurrent neural network that takes as input, encoding the categorical feature as one-hot encoded vectors when needed, the embedding for the word, the lemma of the word, the part of speech, and the casing. These input features are concatenated and fed to a LSTM network composed by two layer of 75 LSTM units each and having a dropout of 0.25 after each layer. The model is bidirectional, meaning there are two LSTM network, one running rom the beginning of the sentence to the end while the other runnig in reverse. The outputs of the two networks are concatenated and fed to a softmax classifier layer.
 
 The datasets used to train the model are the Histo Corpus \footnote{https://github.com/dhfbk/Histo}, composed of news and travel narratives documents published between the second half of the nineteenth century and the beginning of the twentieth century \cite{histo}, and the NIST TAC KBP 2015 Event Nugget Detection corpus \footnote{https://github.com/UKPLab/tac2015-event-detection/tree/master/tacdata}, composed of contemporary weblogs, broadcast news, newsgroups, broadcast conversation \cite{tac}. Event mentions have been manually annotated in the two corpora following different guidelines. Both datasets have been converted to a IOB2 compatible format and they have been divided into a training set and a test set.
 
-The model was trained and evaluated on a subset of the possible combinations (to accomodate the issues given by size disparity of the two corpora) of training sets (trainHisto, trainTAC), test sets (testHisto, testTAC), and two embeddings (embHisto, embGlove). The metrics used for evaluation are precision, recall, and F1-score. Results are shown in Table \ref{tab:nnmodel}. 
+The model was trained and evaluated on a subset of the possible combinations of training sets (trainHisto, trainTAC), test sets (testHisto, testTAC), and two embeddings (embHisto, embGlove). For example in some cases the model was evaluated on trainHisto dataset to exploit its bigger size compared to testHisto. The metrics used for evaluation are precision, recall, and F1-score. Results are shown in Table \ref{tab:nnmodel}. 
 
 \begin{table}
 \centering
@@ -228,78 +229,14 @@ embHisto &  trainTAC & trainHisto & 0.660 & 0.226 & 0.336\\
 
 \section{Concluding remarks}
 
-\subsubsection{Sample Heading (Third Level)} Only two levels of
-headings should be numbered. Lower level headings remain unnumbered;
-they are formatted as run-in headings.
+The analysis of the similarity between word embeddings shows that the magnitude of the differences between embHisto and embGlove doesn't look particulary out of order when compared to the difference between the two contemporary embeddings, embGlove and embCurrent. In the first method of analysis, the juxtapositions, embHisto displays a distance between pair of words very close to the embGlove one, whereas embCurrent seems to have very differenet values. In the second method, on avarage, embCurrent is a bit closer to embGlove than embHisto is, but, when looking at the common words and verbs that usually convey the happening of an event, the discrepancy reduces a lot. This holds true also for the third method, where the metric is the Jaccard distance. In order to analyze the evolution of the language it is interesting to see that terms like computer, keyboard, fame, sport, that have become more popular, used, or chagned their meaning in the recent period, also have the biggest gap when comparing embHisto to embGlove. This first analysis seems to suggest that while the historical embedding has differences to the contemporary one, they don't seem particulary relevant when only verbs conveying event are considered.
 
-\paragraph{Sample Heading (Fourth Level)}
-The contribution should contain no more than four levels of
-headings. Table~\ref{tab1} gives a summary of all heading levels.
+The results of the event detection task show that, when detecting events in a historical corpus, using a historical word embeddings improves the F1 score by around 0.01. Roughly the same gain in performances is obtained when employing a contemporary word embedding for event detection in a contemporary corpus. Mixing the two datasets, by training on the historical one and evaluating on the contemporary one (or viceversa), gives similar improvements but with a much lower F1 score due to the different labeling guidelines used when annotating the datasets. From the results, and when looking at the annotated corpora, it's pretty obvious that the definition of what constitutes an event in the contemporary corpus is stricter when compared to the historical corpus. This is expalins why the F1 is low score for all mixed combinations and why, when training on the historical corpus and evaluating on the contemporary one, the precision is low and the recall is high, and the opposite happens when inverting the corpora. 
 
-\begin{table}
-\caption{Table captions should be placed above the
-tables.}\label{tab1}
-\begin{tabular}{|l|l|l|}
-\hline
-Heading level &  Example & Font size and style\\
-\hline
-Title (centered) &  {\Large\bfseries Lecture Notes} & 14 point, bold\\
-1st-level heading &  {\large\bfseries 1 Introduction} & 12 point, bold\\
-2nd-level heading & {\bfseries 2.1 Printing Area} & 10 point, bold\\
-3rd-level heading & {\bfseries Run-in Heading in Bold.} Text follows & 10 point, bold\\
-4th-level heading & {\itshape Lowest Level Heading.} Text follows & 10 point, italic\\
-\hline
-\end{tabular}
-\end{table}
+In conclusion these experiments showed a slight improvement in the event deteciton in historical text task when using a historical embedding. Obviously a word embedding depends greatly on the algorithm and the corpus from which it has been created, and the event detection task is strongly bound to how the events are annotated in the training set, therefore more experiments with different corpora and different embeddings algorithms would be quite usefull to see if the observerd results are a recurring occurence.
 
 
-\noindent Displayed equations are centered and set on a separate
-line.
-\begin{equation}
-x + y = z
-\end{equation}
-Please try to avoid rasterized images for line-art diagrams and
-schemas. Whenever possible, use vector graphics instead (see
-Fig.~\ref{fig1}).
-
-\begin{figure}
-\includegraphics[width=\textwidth]{fig1.eps}
-\caption{A figure caption is always placed below the illustration.
-Please note that short captions are centered, while long ones are
-justified by the macro package automatically.} \label{fig1}
-\end{figure}
-
-\begin{theorem}
-This is a sample theorem. The run-in heading is set in bold, while
-the following text appears in italics. Definitions, lemmas,
-propositions, and corollaries are styled the same way.
-\end{theorem}
-%
-% the environments 'definition', 'lemma', 'proposition', 'corollary',
-% 'remark', and 'example' are defined in the LLNCS documentclass as well.
-%
-\begin{proof}
-Proofs, examples, and remarks have the initial word in italics,
-while the following text appears in normal font.
-\end{proof}
-For citations of references, we prefer the use of square brackets
-and consecutive numbers. Citations using labels or the author/year
-convention are also acceptable. The following bibliography provides
-a sample reference list with entries for journal
-articles~\cite{ref_article1}, an LNCS chapter~\cite{ref_lncs1}, a
-book~\cite{ref_book1}, proceedings without editors~\cite{ref_proc1},
-and a homepage~\cite{ref_url1}. Multiple citations are grouped
-\cite{ref_article1,ref_lncs1,ref_book1},
-\cite{ref_article1,ref_book1,ref_proc1,ref_url1}.
-%
-% ---- Bibliography ----
-%
-% BibTeX users should specify bibliography style 'splncs04'.
-% References will then be sorted and formatted in the correct style.
-%
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
-%
+\newpage
 \bibliography{biblio}
 \bibliographystyle{ieeetr}
 %
